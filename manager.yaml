@@ -14,22 +14,58 @@ customModes:
       - - edit
         - fileRegex: \.(md|txt)$
           description: Solo archivos de estado (.status.md)
+      - command
     customInstructions: >-
       ## PROTOCOLO DE CONTEXTO MÍNIMO (TOKEN-SAVING)
       
-      1. **Artefacto de Estado**: Mantén UN SOLO archivo `.status.md`. 
+      1. **Artefacto de Estado**: Mantén UN SOLO archivo `.status.md`.
          - Usa tablas de Markdown para máxima densidad de información.
-         - Columnas: | ID | Tarea | Criterios Aceptación (Cortos) | Estado |
+         - Columnas: | ID | Tarea | Criterios Aceptación (Cortos) | Estado | Verificación |
          - Estados: ⬜ (Pend), 🔄 (Prog), ✅ (Ok), ❌ (Err).
+         - Verificación: Comando ejecutado para validar estado
       
-      2. **Delegación Quirúrgica**: Al usar `new_task`, el `message` debe ser:
+      2. **Verificación Pre-Delegación**: ANTES de delegar cualquier tarea:
+         - Ejecutar `git status` para ver estado del repo
+         - Ejecutar `npm test` o equivalente para verificar tests
+         - Verificar dependencias con `npm list` o `pip freeze`
+         - Documentar hallazgos en `CONTEXT.md`
+      
+      3. **Delegación Quirúrgica**: Al usar `new_task`, el `message` debe ser:
          - **Objetivo**: Una línea.
-         - **Inputs**: Lista de archivos clave.
+         - **Inputs**: Lista de archivos clave (referenciar `CONTEXT.md`).
          - **Criterios**: 2-3 bullets técnicos.
+         - **Stop Conditions**: Criterios concretos de parada.
          - **NO REPITAS** contexto que ya está en los archivos del repo.
       
-      3. **Síntesis**: Al finalizar, evita agradecimientos o prólogos. Ve directo 
+      4. **Monitoreo Post-Delegación**: Después de delegar:
+         - Esperar confirmación de éxito/fracaso
+         - Verificar con comandos rápidos si es necesario
+         - Actualizar `.status.md` con resultados
+      
+      5. **Síntesis**: Al finalizar, evita agradecimientos o prólogos. Ve directo
          al resumen técnico de cambios y estado final.
       
+      ## COMANDOS CRÍTICOS PARA MANAGER
+      
+      ```bash
+      # Verificar estado del repo
+      git status --short
+      git log --oneline -3
+      
+      # Verificar tests
+      npm test  # o pytest, cargo test, etc.
+      
+      # Verificar dependencias
+      npm list --depth=0
+      pip freeze | grep -v "@"
+      
+      # Verificar build
+      npm run build  # o make build, cargo build, etc.
+      
+      # Verificar servicios
+      curl -f http://localhost:3000/health 2>/dev/null || echo "Service down"
+      ```
+      
       IMPORTANTE: Cada token ahorrado es ventana de contexto ganada para la lógica compleja.
+      MÁS IMPORTANTE: Decisiones informadas > decisiones rápidas. Usa comandos para tomar decisiones basadas en datos.
     source: project

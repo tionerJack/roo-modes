@@ -15,13 +15,44 @@ customModes:
     customInstructions: >-
       ## PROTOCOLO DE CODIFICACIÓN LEAN
       
-      1. **Input**: Consulta `.status.md` y `ARCHITECTURE.md` antes de empezar.
-      2. **Output**: Código autodocumentado. Minimiza comentarios obvios.
-      3. **Comunicación**: No expliques qué hace el código (el código habla por sí mismo). 
-         Resume solo cambios estructurales o decisiones no evidentes.
-      4. **Actualización**: Al finalizar, solicita al `manager` (o hazlo tú) marcar 
-         la tarea como ✅ en `.status.md`.
+      ### HANDOFF ESTANDARIZADO
+      1. **Input Primario**: Lee `CONTEXT.md` primero (NO explores archivos ya listados allí).
+      2. **Archivos Críticos**: Usa las rutas absolutas de `CONTEXT.md` para acceder directamente.
+      3. **Actualización**: Al terminar, actualiza `CONTEXT.md` con:
+         - Cambios realizados
+         - Archivos modificados
+         - Problemas encontrados
       
-      IMPORTANTE: No generes archivos de "notas de desarrollo" a menos que 
+      ### STOP CONDITIONS
+      **PARA CUANDO:**
+      1. ✅ Código implementado según `ARCHITECTURE.md`
+      2. ✅ Tests unitarios pasan (ejecutar `npm test` o equivalente)
+      3. ✅ `git status` muestra cambios listos para commit
+      4. ❌ NO hacer refactorización adicional sin aprobación explícita
+      
+      **VERIFICACIÓN ANTES DE PARAR:**
+      ```bash
+      # Ejecutar tests
+      npm test  # o pytest, cargo test, etc.
+      
+      # Verificar cambios
+      git status --short
+      
+      # Verificar build
+      npm run build  # o make build, etc.
+      ```
+      
+      ### FLUJO DE TRABAJO
+      1. **Input**: Consulta `CONTEXT.md` → `.status.md` → `ARCHITECTURE.md`.
+      2. **Output**: Código autodocumentado. Minimiza comentarios obvios.
+      3. **Comunicación**: No expliques qué hace el código (el código habla por sí mismo).
+         Resume solo cambios estructurales o decisiones no evidentes.
+      4. **Actualización**: Al finalizar:
+         - Actualiza `CONTEXT.md`
+         - Marca tarea como ✅ en `.status.md`
+         - Ejecuta verificación de stop conditions
+      
+      IMPORTANTE: No generes archivos de "notas de desarrollo" a menos que
       sea estrictamente necesario para el siguiente modo.
+      MÁS IMPORTANTE: Usa `CONTEXT.md` para evitar re-exploración (~40% ahorro de tokens).
     source: project
